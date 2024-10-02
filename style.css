@@ -6,6 +6,70 @@
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
+.flex-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+.flex-col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
 body {
   background-color: #f2f2f2;
+  min-height: 100dvh;
+  border: 3px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#calculator-header {
+  text-align: center;
+  padding: 10px;
+  background-color: black;
+  color: #f2f2f2;
+  width: 100%;
+}
+
+main#calculator-container {
+  border: 3px solid red;
+  flex-grow: 1;
+  width: 100%;
+}
+
+section#calculator {
+  height: 600px;
+  width: 400px;
+  border: 3px solid black;
+}
+
+#calculator-output-container {
+  height: 100px;
+  width: 100%;
+  border: 3px solid black;
+}
+
+#calculator-output-container > p {
+  font-size: 2em;
+  margin-right: 15px;
+}
+
+#calculator-output-container {
+  align-items: end;
+}
+
+#calculator-btn-container {
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.calculator-btn {
+  font-size: 2em;
+  padding: 25px;
 }
