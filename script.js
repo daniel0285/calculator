@@ -16,8 +16,10 @@ calculatorButtons.addEventListener("click", (event) => {
       insertDigits(event.target.id);
       // console.log(event.target.innerText);
     } else if (mathOperators.includes(event.target.id)) {
-      assignOperator(event.target.id, event.target.innerText);
-      // console.log(event.target.innerText);
+      if (secondNumber.length == 0) {
+        assignOperator(event.target.id, event.target.innerText);
+        // console.log(event.target.innerText);
+      }
     } else if (deleteAndClear.includes(event.target.id)) {
       console.log(event.target.innerText);
     } else if (event.target.id === "equal") {
@@ -26,15 +28,29 @@ calculatorButtons.addEventListener("click", (event) => {
   }
 });
 
-function insertDigits(digit) {
+function insertDigits(input) {
   if (firstNumber.length !== 0 && currentOperator.name !== undefined) {
-    secondNumber.push(digit);
-    updateCalculatorDisplay();
-    console.log("secondNumber");
+    if (
+      (secondNumber[0] === "0" && secondNumber[1] !== "." && input !== ".") ||
+      (secondNumber.includes(".") && input === ".")
+    ) {
+      doNothing;
+    } else {
+      secondNumber.push(input);
+      updateCalculatorDisplay();
+      console.log("secondNumber");
+    }
   } else {
-    firstNumber.push(digit);
-    updateCalculatorDisplay();
-    console.log("firstNumber");
+    if (
+      (firstNumber[0] === "0" && firstNumber[1] !== "." && input !== ".") ||
+      (firstNumber.includes(".") && input === ".")
+    ) {
+      doNothing;
+    } else {
+      firstNumber.push(input);
+      updateCalculatorDisplay();
+      console.log("firstNumber");
+    }
   }
 }
 
@@ -50,6 +66,11 @@ function assignOperator(name, symbol) {
   if (firstNumber.length !== 0) {
     currentOperator.name = name;
     currentOperator.symbol = symbol;
+    updateCalculatorDisplay();
     console.log(`new operator: ${currentOperator.name}`);
   }
+}
+
+function doNothing() {
+  return 0;
 }
