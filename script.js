@@ -28,29 +28,11 @@ calculatorButtons.addEventListener("click", (event) => {
   }
 });
 
-function insertDigits(input) {
+function insertDigits(userInput) {
   if (firstNumber.length !== 0 && currentOperator.name !== undefined) {
-    if (
-      (secondNumber[0] === "0" && secondNumber[1] !== "." && input !== ".") ||
-      (secondNumber.includes(".") && input === ".")
-    ) {
-      doNothing;
-    } else {
-      secondNumber.push(input);
-      updateCalculatorDisplay();
-      console.log("secondNumber");
-    }
+    checkInputLimitations(secondNumber, userInput);
   } else {
-    if (
-      (firstNumber[0] === "0" && firstNumber[1] !== "." && input !== ".") ||
-      (firstNumber.includes(".") && input === ".")
-    ) {
-      doNothing;
-    } else {
-      firstNumber.push(input);
-      updateCalculatorDisplay();
-      console.log("firstNumber");
-    }
+    checkInputLimitations(firstNumber, userInput);
   }
 }
 
@@ -60,6 +42,21 @@ function updateCalculatorDisplay() {
     .concat(firstNumber, currentOperator.symbol, secondNumber)
     .join("");
   calculatorInput.innerText = currentCalculatorDisplay;
+}
+
+function checkInputLimitations(currentNumber, userInput) {
+  if (
+    (currentNumber[0] === "0" &&
+      currentNumber[1] !== "." &&
+      userInput !== ".") ||
+    (firstNumber.includes(".") && userInput === ".")
+  ) {
+    doNothing;
+  } else {
+    currentNumber.push(userInput);
+    updateCalculatorDisplay();
+    console.log(`currentNumber`);
+  }
 }
 
 function assignOperator(name, symbol) {
