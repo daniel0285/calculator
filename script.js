@@ -4,11 +4,11 @@ const calculatorButtons = document.getElementById("calculator-btn-container");
 let firstNumber = [];
 let currentOperator = {};
 let secondNumber = [];
-const MATH_OPERATORS = ["add", "subtract", "multiply", "divide"];
 
 calculatorButtons.addEventListener("click", (event) => {
   const DIGITS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."];
   const DELETE_AND_CLEAR = ["delete", "clear"];
+  const MATH_OPERATORS = ["add", "subtract", "multiply", "divide"];
 
   if (event.target.id !== "calculator-btn-container") {
     if (DIGITS.includes(event.target.innerText)) {
@@ -21,12 +21,11 @@ calculatorButtons.addEventListener("click", (event) => {
         assignOperator(event.target.id, event.target.innerText);
       }
     } else if (DELETE_AND_CLEAR.includes(event.target.id)) {
-      console.log(event.target.innerText);
+      deleteAndClearDigits(event.target.id);
     } else if (event.target.id === "equal") {
       if (secondNumber.length !== 0 && currentOperator.name !== undefined) {
         calculateUserInput(firstNumber, currentOperator, secondNumber);
       }
-      console.log("equal");
     }
   }
 });
@@ -39,18 +38,43 @@ function insertDigits(userInput) {
   }
 }
 
+function deleteAndClearDigits(userInput) {
+  if (userInput === "delete") {
+    backSpace();
+  } else if (userInput === "clear") {
+    clearCalculator();
+  } else {
+    alert("invalid input");
+  }
+}
+
+function clearCalculator() {
+  firstNumber = [];
+  currentOperator = {};
+  secondNumber = [];
+  calculatorDisplay.textContent = "0";
+}
+
+function backSpace() {
+  if (secondNumber.length === 0 && currentOperator.name == null) {
+    firstNumber.pop();
+  } else if (secondNumber.length === 0) {
+    currentOperator = {};
+  } else {
+    secondNumber.pop();
+  }
+  updateCalculatorDisplay();
+}
+
 function updateCalculatorDisplay() {
-  const display = [];
-  const currentCalculatorDisplay = display
+  const currentCalculatorDisplay = []
     .concat(firstNumber, " ", currentOperator.symbol, " ", secondNumber)
     .join("");
   calculatorDisplay.innerText = currentCalculatorDisplay;
 }
 
 function checkInputLimitations(arrayNumber, userInput) {
-  if (firstNumber.includes(".") && userInput == ".") {
-    doNothing;
-  } else {
+  if (!(arrayNumber.includes(".") && userInput == ".")) {
     if (arrayNumber[0] == "0" && arrayNumber[1] != ".") {
       arrayNumber.splice(0, arrayNumber.length, userInput);
     } else if (arrayNumber[0] == ".") {
@@ -90,16 +114,12 @@ function calculateUserInput(firstInput, operator, secondInput) {
 }
 
 function displayResult(result) {
-  calculatorDisplay.innerText = result;
   firstNumber.splice(0, firstNumber.length, result);
-  secondNumber.length = 0;
+  secondNumber = [];
   currentOperator = {};
+  updateCalculatorDisplay();
 }
 
 function convertToInteger(arr) {
   return parseFloat(arr.join(""));
-}
-
-function doNothing() {
-  return 0;
 }
