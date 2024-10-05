@@ -1,9 +1,5 @@
-const calculatorDisplayInput = document.getElementById(
-  "calculator-display-input"
-);
-const calculatorResultDisplay = document.getElementById(
-  "calculator-display-result"
-);
+const calculatorDisplayInput = document.getElementById("calculator-input");
+const calculatorResultDisplay = document.getElementById("calculator-result");
 const calculatorButtons = document.getElementById("calculator-btn-container");
 
 let firstNumber = [];
@@ -16,26 +12,32 @@ calculatorButtons.addEventListener("click", (event) => {
     calculatorHandler(event);
   }
 });
-// calculatorButtons.addEventListener("keyup", (event) => console.log(event.key));
+
+window.addEventListener("keypress", (e) => {
+  if (e.key == 8) {
+    alert("8");
+  }
+});
 
 function calculatorHandler(event) {
   const DIGITS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."];
   const DELETE_AND_CLEAR = ["delete", "clear"];
   const MATH_OPERATORS = ["add", "subtract", "multiply", "divide"];
 
-  if (DIGITS.includes(event.target.innerText)) {
-    insertDigits(event.target.id);
-  } else if (MATH_OPERATORS.includes(event.target.id)) {
+  const eventText = event.target.innerText;
+  const eventId = event.target.id;
+
+  if (DIGITS.includes(eventText)) {
+    insertDigits(eventId);
+  } else if (MATH_OPERATORS.includes(eventId)) {
     if (secondNumber.length == 0) {
-      assignOperator(event.target.id, event.target.innerText);
+      assignOperator(eventId, eventText);
     } else if (!(firstNumber.length == 0 && secondNumber.length == 0)) {
-      calculateUserInput(firstNumber, currentOperator, secondNumber);
-      // updateResultDisplay(result);
-      assignOperator(event.target.id, event.target.innerText);
+      assignOperator(eventId, eventText);
     }
-  } else if (DELETE_AND_CLEAR.includes(event.target.id)) {
-    deleteAndClearDigits(event.target.id);
-  } else if (event.target.id === "equal") {
+  } else if (DELETE_AND_CLEAR.includes(eventId)) {
+    deleteAndClearDigits(eventId);
+  } else if (eventId === "equal") {
     if (secondNumber.length !== 0 && currentOperator.name !== undefined) {
       calculateUserInput(firstNumber, currentOperator, secondNumber);
     }
@@ -91,14 +93,13 @@ function updateInputDisplay() {
     calculatorDisplayInput.innerText = "0";
   } else {
     calculatorDisplayInput.innerText = currentCalculatorDisplay;
-    // calculatorResultDisplay.innerText = 0;
   }
 }
 
 function updateResultDisplay(result) {
   firstNumber = result;
   secondNumber = [];
-  calculatorResultDisplay.innerText = result.join("");
+  calculatorResultDisplay.innerText = "= " + result.join("");
 }
 
 function checkInputBehavior(arrayNumber, userInput) {
