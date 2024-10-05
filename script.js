@@ -5,7 +5,10 @@ let firstNumber = [];
 let currentOperator = {};
 let secondNumber = [];
 
-calculatorButtons.addEventListener("click", (event) => {
+calculatorButtons.addEventListener("click", calculatorHandler);
+// calculatorButtons.addEventListener("keyup", (event) => console.log(event.key));
+
+function calculatorHandler(event) {
   const DIGITS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."];
   const DELETE_AND_CLEAR = ["delete", "clear"];
   const MATH_OPERATORS = ["add", "subtract", "multiply", "divide"];
@@ -28,13 +31,13 @@ calculatorButtons.addEventListener("click", (event) => {
       }
     }
   }
-});
+}
 
 function insertDigits(userInput) {
   if (firstNumber.length !== 0 && currentOperator.name !== undefined) {
-    checkInputLimitations(secondNumber, userInput);
+    checkInputBehavior(secondNumber, userInput);
   } else {
-    checkInputLimitations(firstNumber, userInput);
+    checkInputBehavior(firstNumber, userInput);
   }
 }
 
@@ -56,9 +59,9 @@ function clearCalculator() {
 }
 
 function backSpace() {
-  if (secondNumber.length === 0 && currentOperator.name == null) {
+  if (checkIfArrayIsEmpty(secondNumber) && currentOperator.name == undefined) {
     firstNumber.pop();
-  } else if (secondNumber.length === 0) {
+  } else if (checkIfArrayIsEmpty(secondNumber)) {
     currentOperator = {};
   } else {
     secondNumber.pop();
@@ -70,20 +73,25 @@ function updateCalculatorDisplay() {
   const currentCalculatorDisplay = []
     .concat(firstNumber, " ", currentOperator.symbol, " ", secondNumber)
     .join("");
-  calculatorDisplay.innerText = currentCalculatorDisplay;
+
+  if (checkIfArrayIsEmpty(firstNumber)) {
+    calculatorDisplay.innerText = "0";
+  } else {
+    calculatorDisplay.innerText = currentCalculatorDisplay;
+  }
 }
 
-function checkInputLimitations(arrayNumber, userInput) {
+function checkInputBehavior(arrayNumber, userInput) {
   if (!(arrayNumber.includes(".") && userInput == ".")) {
     if (arrayNumber[0] == "0" && arrayNumber[1] != ".") {
       arrayNumber.splice(0, arrayNumber.length, userInput);
-    } else if (arrayNumber[0] == ".") {
-      arrayNumber.unshift("0");
-      arrayNumber.push(userInput);
+    } else if (checkIfArrayIsEmpty(arrayNumber) && userInput == ".") {
+      arrayNumber.push("0", userInput);
     } else {
       arrayNumber.push(userInput);
     }
   }
+
   updateCalculatorDisplay();
 }
 
@@ -91,35 +99,50 @@ function assignOperator(name, symbol) {
   if (firstNumber.length != 0) {
     currentOperator.name = name;
     currentOperator.symbol = symbol;
+
     updateCalculatorDisplay();
   }
 }
 
 function calculateUserInput(firstInput, operator, secondInput) {
   let result;
+  const num1 = convertToNumber(firstInput);
+  const num2 = convertToNumber(secondInput);
   if (operator.name === "add") {
-    result = convertToInteger(firstInput) + convertToInteger(secondInput);
+    result = num1 + num2;
   } else if (operator.name === "subtract") {
-    result = convertToInteger(firstInput) - convertToInteger(secondInput);
+    result = num1 - num2;
   } else if (operator.name === "multiply") {
-    result = convertToInteger(firstInput) * convertToInteger(secondInput);
+    result = num1 * num2;
   } else if (operator.name === "divide") {
     if ((firstInput == 0 && secondInput == 0) || secondInput == 0) {
       result = "Division by zero is undefined";
     } else {
-      result = convertToInteger(firstInput) / convertToInteger(secondInput);
+      result = num1 / num2;
     }
   }
-  displayResult(result);
+  displayResult(convertToArray(checkIfNumberHasDecimal(result)));
 }
 
 function displayResult(result) {
-  firstNumber.splice(0, firstNumber.length, result);
+  firstNumber = result;
   secondNumber = [];
   currentOperator = {};
   updateCalculatorDisplay();
 }
 
-function convertToInteger(arr) {
+function convertToNumber(arr) {
   return parseFloat(arr.join(""));
+}
+
+function convertToArray(input) {
+  return input.toString().split("");
+}
+
+function checkIfNumberHasDecimal(input) {
+  return input % 1 == 0 ? input : input.toFixed(4);
+}
+
+function checkIfArrayIsEmpty(array) {
+  return array.length === 0 ? true : false;
 }
