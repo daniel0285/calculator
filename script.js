@@ -1,11 +1,21 @@
-const calculatorDisplay = document.getElementById("calculator-display");
+const calculatorDisplayInput = document.getElementById(
+  "calculator-display-input"
+);
+const calculatorResultDisplay = document.getElementById(
+  "calculator-display-result"
+);
 const calculatorButtons = document.getElementById("calculator-btn-container");
 
 let firstNumber = [];
 let currentOperator = {};
 let secondNumber = [];
+let result = 0;
 
-calculatorButtons.addEventListener("click", calculatorHandler);
+calculatorButtons.addEventListener("click", (event) => {
+  if (event.target.id !== "calculator-btn-container") {
+    calculatorHandler(event);
+  }
+});
 // calculatorButtons.addEventListener("keyup", (event) => console.log(event.key));
 
 function calculatorHandler(event) {
@@ -13,22 +23,21 @@ function calculatorHandler(event) {
   const DELETE_AND_CLEAR = ["delete", "clear"];
   const MATH_OPERATORS = ["add", "subtract", "multiply", "divide"];
 
-  if (event.target.id !== "calculator-btn-container") {
-    if (DIGITS.includes(event.target.innerText)) {
-      insertDigits(event.target.id);
-    } else if (MATH_OPERATORS.includes(event.target.id)) {
-      if (secondNumber.length == 0) {
-        assignOperator(event.target.id, event.target.innerText);
-      } else if (!(firstNumber.length == 0 && secondNumber.length == 0)) {
-        calculateUserInput(firstNumber, currentOperator, secondNumber);
-        assignOperator(event.target.id, event.target.innerText);
-      }
-    } else if (DELETE_AND_CLEAR.includes(event.target.id)) {
-      deleteAndClearDigits(event.target.id);
-    } else if (event.target.id === "equal") {
-      if (secondNumber.length !== 0 && currentOperator.name !== undefined) {
-        calculateUserInput(firstNumber, currentOperator, secondNumber);
-      }
+  if (DIGITS.includes(event.target.innerText)) {
+    insertDigits(event.target.id);
+  } else if (MATH_OPERATORS.includes(event.target.id)) {
+    if (secondNumber.length == 0) {
+      assignOperator(event.target.id, event.target.innerText);
+    } else if (!(firstNumber.length == 0 && secondNumber.length == 0)) {
+      calculateUserInput(firstNumber, currentOperator, secondNumber);
+      // updateResultDisplay(result);
+      assignOperator(event.target.id, event.target.innerText);
+    }
+  } else if (DELETE_AND_CLEAR.includes(event.target.id)) {
+    deleteAndClearDigits(event.target.id);
+  } else if (event.target.id === "equal") {
+    if (secondNumber.length !== 0 && currentOperator.name !== undefined) {
+      calculateUserInput(firstNumber, currentOperator, secondNumber);
     }
   }
 }
@@ -55,57 +64,65 @@ function clearCalculator() {
   firstNumber = [];
   currentOperator = {};
   secondNumber = [];
-  calculatorDisplay.textContent = "0";
+  calculatorDisplayInput.textContent = "";
+  calculatorResultDisplay.textContent = "0";
 }
 
 function backSpace() {
-  if (checkIfArrayIsEmpty(secondNumber) && currentOperator.name == undefined) {
+  if (isThisArrayEmpty(secondNumber) && currentOperator.name == undefined) {
     firstNumber.pop();
-  } else if (checkIfArrayIsEmpty(secondNumber)) {
+  } else if (
+    isThisArrayEmpty(secondNumber) &&
+    currentOperator.name !== undefined
+  ) {
     currentOperator = {};
   } else {
     secondNumber.pop();
   }
-  updateCalculatorDisplay();
+  updateInputDisplay();
 }
 
-function updateCalculatorDisplay() {
+function updateInputDisplay() {
   const currentCalculatorDisplay = []
     .concat(firstNumber, " ", currentOperator.symbol, " ", secondNumber)
     .join("");
 
-  if (checkIfArrayIsEmpty(firstNumber)) {
-    calculatorDisplay.innerText = "0";
+  if (isThisArrayEmpty(firstNumber)) {
+    calculatorDisplayInput.innerText = "0";
   } else {
-    calculatorDisplay.innerText = currentCalculatorDisplay;
+    calculatorDisplayInput.innerText = currentCalculatorDisplay;
+    // calculatorResultDisplay.innerText = 0;
   }
+}
+
+function updateResultDisplay(result) {
+  firstNumber = result;
+  secondNumber = [];
+  calculatorResultDisplay.innerText = result.join("");
 }
 
 function checkInputBehavior(arrayNumber, userInput) {
   if (!(arrayNumber.includes(".") && userInput == ".")) {
     if (arrayNumber[0] == "0" && arrayNumber[1] != ".") {
       arrayNumber.splice(0, arrayNumber.length, userInput);
-    } else if (checkIfArrayIsEmpty(arrayNumber) && userInput == ".") {
+    } else if (isThisArrayEmpty(arrayNumber) && userInput == ".") {
       arrayNumber.push("0", userInput);
     } else {
       arrayNumber.push(userInput);
     }
   }
-
-  updateCalculatorDisplay();
+  updateInputDisplay();
 }
 
 function assignOperator(name, symbol) {
   if (firstNumber.length != 0) {
     currentOperator.name = name;
     currentOperator.symbol = symbol;
-
-    updateCalculatorDisplay();
+    updateInputDisplay();
   }
 }
 
 function calculateUserInput(firstInput, operator, secondInput) {
-  let result;
   const num1 = convertToNumber(firstInput);
   const num2 = convertToNumber(secondInput);
   if (operator.name === "add") {
@@ -115,20 +132,13 @@ function calculateUserInput(firstInput, operator, secondInput) {
   } else if (operator.name === "multiply") {
     result = num1 * num2;
   } else if (operator.name === "divide") {
-    if ((firstInput == 0 && secondInput == 0) || secondInput == 0) {
-      result = "Division by zero is undefined";
+    if ((num1 == 0 && num2 == 0) || num2 == 0) {
+      alert("Division by zero is undefined");
     } else {
       result = num1 / num2;
     }
   }
-  displayResult(convertToArray(checkIfNumberHasDecimal(result)));
-}
-
-function displayResult(result) {
-  firstNumber = result;
-  secondNumber = [];
-  currentOperator = {};
-  updateCalculatorDisplay();
+  updateResultDisplay(convertToArray(checkIfNumberHasDecimal(result)));
 }
 
 function convertToNumber(arr) {
@@ -143,6 +153,6 @@ function checkIfNumberHasDecimal(input) {
   return input % 1 == 0 ? input : input.toFixed(4);
 }
 
-function checkIfArrayIsEmpty(array) {
+function isThisArrayEmpty(array) {
   return array.length === 0 ? true : false;
 }
