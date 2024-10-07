@@ -1,3 +1,18 @@
+/* @font-face {
+  font-family: digital;
+  src: url(digital-7.ttf);
+} */
+
+:root {
+  --color-1: rgb(229, 229, 229);
+  --color-2: rgb(24, 23, 23);
+  --color-3: rgb(30, 29, 29);
+  --color-4: rgb(212, 255, 187);
+  --color-5: rgb(47, 46, 46);
+
+  --btn-size: 80px;
+}
+
 * {
   padding: 0;
   margin: 0;
@@ -19,57 +34,92 @@
   flex-direction: column;
 }
 
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 body {
-  background-color: #f2f2f2;
   min-height: 100dvh;
-  border: 3px solid black;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  background-color: var(--color-3);
 }
 
 #calculator-header {
   text-align: center;
   padding: 10px;
-  background-color: black;
-  color: #f2f2f2;
+  background-color: var(--color-2);
+  color: var(--color-1);
   width: 100%;
 }
 
 main#calculator-container {
-  border: 3px solid red;
   flex-grow: 1;
   width: 100%;
 }
 
 section#calculator {
-  height: 600px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-direction: column;
   width: 400px;
-  border: 3px solid black;
+  height: 600px;
+  border-radius: 20px;
 }
 
 #calculator-output-container {
-  height: 100px;
   width: 100%;
-  border: 3px solid black;
-}
-
-#calculator-output-container > p {
-  font-size: 2em;
-  margin-right: 15px;
-}
-
-#calculator-output-container {
+  border-radius: 16px 16px 0px 0px;
+  gap: 10px;
+  background-color: var(--color-4);
   align-items: end;
+  padding: 10px;
+}
+
+#calculator-output-container > * {
+  height: 50px;
+  font-size: 3em;
+  margin-right: 15px;
+  color: var(--color-2);
+  /* font-weight: bold; */
+  /* font-family: digital; */
 }
 
 #calculator-btn-container {
+  /* gap: 10px 10px; */
   flex-wrap: wrap;
-  gap: 10px;
+  flex-grow: 1;
+  background-color: var(--color-5);
+  padding: 10px;
+  border-radius: 0px 0px 16px 16px;
+}
+
+.button-group {
+  width: 100%;
+  justify-content: space-evenly;
 }
 
 .calculator-btn {
   font-size: 2em;
-  padding: 25px;
+  font-weight: bold;
+  width: var(--btn-size);
+  height: var(--btn-size);
+  border-radius: 20px;
+  background-color: var(--color-2);
+  color: var(--color-1);
+  outline: none;
+  border: none;
+}
+
+.lrg-btn {
+  width: calc(100% / 2.3);
+}
+
+.lrg-txt {
+  font-size: 3em;
 }
