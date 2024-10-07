@@ -7,6 +7,7 @@ const calculatorButtons = document.getElementById("calculator-btn-container");
 const DIGITS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."];
 const ACTIONS = ["delete", "clear", "equal"];
 const OPERATORS = ["add", "subtract", "multiply", "divide"];
+const KEYBOARD_KEYS = ["+", "-", "*", "/", "Enter", "=", "Delete", "c"];
 
 let firstNumber = [];
 let currentOperator = {};
@@ -17,6 +18,21 @@ let result = 0;
 calculatorButtons.addEventListener("click", (e) =>
   e.target.id !== "calculator-btn-container" ? calculatorButtonHandler(e) : null
 );
+
+window.addEventListener("keypress", (e) => {
+  if (DIGITS.includes(e.key)) handleDigitInput(e.key);
+  if (KEYBOARD_KEYS.includes(e.key)) keyboardInputHandler(e.key);
+});
+
+function keyboardInputHandler(key) {
+  if (key === "+") handleOperatorInput("add", "+");
+  if (key === "-") handleOperatorInput("subtract", "−");
+  if (key === "*") handleOperatorInput("multiply", "×");
+  if (key === "/") handleOperatorInput("divide", "÷");
+  if (key === "Delete") handleActionInput("delete");
+  if (key === "c" || key === "C") handleActionInput("clear");
+  if (key === "Enter" || key === "=") handleActionInput("equal");
+}
 
 function calculatorButtonHandler(e) {
   const eventText = e.target.innerText;
@@ -111,7 +127,7 @@ function calculateUserInput() {
         result = num1 + num2;
         break;
       case "subtract":
-        result = num1 + num2;
+        result = num1 - num2;
         break;
       case "multiply":
         result = num1 * num2;
