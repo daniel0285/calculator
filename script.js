@@ -52,7 +52,7 @@ function handleDigitInput(userInput) {
 }
 
 function handleOperatorInput(name, symbol) {
-  if (secondNumber.length == 0) {
+  if (isArrayEmpty(secondNumber)) {
     updateOperator(name, symbol);
   } else if (!isArrayEmpty(firstNumber) && !isArrayEmpty(secondNumber)) {
     updateOperator(name, symbol);
@@ -86,9 +86,13 @@ function removeLastInput() {
 }
 
 function updateInputDisplay() {
-  const currentCalculatorDisplay = []
-    .concat(...firstNumber, " ", currentOperator.symbol, " ", secondNumber)
-    .join("");
+  const currentCalculatorDisplay = [
+    ...firstNumber,
+    " ",
+    currentOperator.symbol,
+    " ",
+    ...secondNumber,
+  ].join("");
   calculatorDisplayInput.innerText = currentCalculatorDisplay || 0;
 }
 
@@ -153,9 +157,9 @@ function convertToArray(number) {
 }
 
 function formatResult(number) {
-  return number % 1 == 0 ? number : parseFloat(number.toFixed(4));
+  return parseFloat(number.toFixed(4));
 }
 
 function isArrayEmpty(array) {
-  return array.length === 0 ? true : false;
+  return array.length === 0;
 }
