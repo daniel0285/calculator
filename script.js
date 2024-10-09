@@ -1,6 +1,6 @@
 // DOM Elements
 const calculatorDisplayInput = document.getElementById("calculator-input");
-const calculatorResultDisplay = document.getElementById("calculator-result");
+const calculatorDisplayResult = document.getElementById("calculator-result");
 const calculatorButtons = document.getElementById("calculator-btn-container");
 
 // Constants
@@ -71,7 +71,7 @@ function clearCalculator() {
   currentOperator = {};
   secondNumber = [];
   calculatorDisplayInput.textContent = "0";
-  calculatorResultDisplay.textContent = "0";
+  calculatorDisplayResult.textContent = "0";
 }
 
 function removeLastInput() {
@@ -99,7 +99,7 @@ function updateInputDisplay() {
 function updateResultDisplay(result) {
   firstNumber = result;
   secondNumber = [];
-  calculatorResultDisplay.innerText = `= ${result.join("")}`;
+  calculatorDisplayResult.innerText = `= ${result.join("")}`;
 }
 
 function updateNumberInput(arrayNumber, userInput) {
