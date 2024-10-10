@@ -116,7 +116,7 @@ function updateNumberInput(arrayNumber, userInput) {
 }
 
 function updateOperator(name, symbol) {
-  if (firstNumber.length > 0) {
+  if (firstNumber.length > 0 && isArrayEmpty(secondNumber)) {
     currentOperator = { name, symbol };
     updateInputDisplay();
   }
