@@ -12,7 +12,7 @@ const KEYBOARD_KEYS = ["+", "-", "*", "/", "Enter", "=", "Delete", "c"];
 let firstNumber = [];
 let currentOperator = {};
 let secondNumber = [];
-let result = 0;
+let result;
 
 // Event Listeners
 calculatorButtons.addEventListener("click", (e) =>
@@ -99,6 +99,7 @@ function updateInputDisplay() {
 function updateResultDisplay(result) {
   firstNumber = result;
   secondNumber = [];
+  currentOperator = {};
   calculatorDisplayResult.innerText = `= ${result.join("")}`;
 }
 
@@ -118,8 +119,8 @@ function updateNumberInput(arrayNumber, userInput) {
 function updateOperator(name, symbol) {
   if (firstNumber.length > 0 && isArrayEmpty(secondNumber)) {
     currentOperator = { name, symbol };
-    updateInputDisplay();
   }
+  updateInputDisplay();
 }
 
 function calculateUserInput() {
