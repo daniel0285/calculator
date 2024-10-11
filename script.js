@@ -55,8 +55,8 @@ function handleOperatorInput(name, symbol) {
   if (isArrayEmpty(secondNumber)) {
     updateOperator(name, symbol);
   } else if (!isArrayEmpty(firstNumber) && !isArrayEmpty(secondNumber)) {
-    updateOperator(name, symbol);
     calculateUserInput();
+    updateOperator(name, symbol);
   }
 }
 
