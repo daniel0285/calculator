@@ -99,7 +99,6 @@ function updateInputDisplay() {
 function updateResultDisplay(result) {
   firstNumber = result;
   secondNumber = [];
-  currentOperator = {};
   calculatorDisplayResult.innerText = `= ${result.join("")}`;
 }
 
